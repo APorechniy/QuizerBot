@@ -7,6 +7,7 @@ import { QuizState, type Question, type UserSession, type BitrixPayload } from '
 dotenv.config();
 
 const TOKEN = process.env.BOT_TOKEN;
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 
 if (!TOKEN) {
     console.error("❌ Ошибка: BOT_TOKEN не задан в .env файле!");
