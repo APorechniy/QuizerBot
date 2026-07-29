@@ -21,7 +21,6 @@ export async function onCallback(ctx: Context) {
 
     // Если игрок уже не проходит опрос
     if (session.state !== QuizState.ANSWERING) {
-        await ctx.answerOnCallback({});
         return;
     }
 
@@ -31,7 +30,6 @@ export async function onCallback(ctx: Context) {
 
     // Игнорируем повторные клики по старым вопросам
     if (qIdx !== session.currentIndex) {
-        await ctx.answerOnCallback({});
         return;
     }
 
@@ -45,7 +43,6 @@ export async function onCallback(ctx: Context) {
 
     session.currentIndex += 1;
 
-    await ctx.answerOnCallback({});
     await ctx.reply(`Ваш выбор: *${selectedOption}*`, { format: 'markdown' });
 
     // Следующий вопрос
