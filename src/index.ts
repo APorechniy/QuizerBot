@@ -89,10 +89,14 @@ bot.on('message_callback', async (ctx: Context) => {
 bot.on('message_created', async (ctx: Context) => {
     const textMessage = ctx.message?.body.text;
 
+    console.log("---------")
+    console.log("Message created")
+    console.log(`Отправлена команда ${textMessage}`)
+    console.log(`Тело сообщения ${ctx.message?.body}`)
+    ctx.reply(JSON.stringify(ctx.message?.body))
+
     // Игнорируем вызовы команд
     if (textMessage && textMessage.startsWith('/')) {
-        console.log(`Отправлена команда ${textMessage}`)
-        console.log(`Тело сообщения ${ctx.message?.body}`)
         return;
     }
 
