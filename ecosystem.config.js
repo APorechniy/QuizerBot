@@ -1,8 +1,8 @@
 module.exports = {
     apps: [{
         name: 'quizer',
-        script: 'npm',
-        args: 'run dev',
+        script: 'npx',
+        args: 'tsx src/index.ts',
         autorestart: true,
         watch: false,
         max_memory_restart: '500M'
