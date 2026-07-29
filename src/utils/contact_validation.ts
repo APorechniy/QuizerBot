@@ -45,5 +45,5 @@ export function validateString(input: string | null): ValidationResult {
         return { ERROR: 'Invalid phone number format' };
     }
 
-    return { ERROR: 'String is neither valid email nor phone number' };
+    return { ERROR: `String is neither valid email nor phone number: ${trimmed}` };
 }
