@@ -27,3 +27,5 @@ export interface BitrixPayload {
     answers: QuizAnswer[];
     contact: string;
 }
+
+export type UserSessionStorage = Map<number, UserSession>

@@ -1,8 +1,10 @@
 import { Bot, Context } from '@maxhub/max-bot-api';
-import * as fs from 'fs';
-import * as path from 'path';
 import dotenv from 'dotenv';
-import { QuizState, type Question, type UserSession, type BitrixPayload } from './types';
+import { QuizState, type BitrixPayload } from './types';
+import { QUESTIONS } from './questions';
+import { clearSession, getSession } from './storage';
+import { sendQuestion } from './commands/send_question';
+import { start } from './commands/start';
 
 dotenv.config();
 
@@ -17,35 +19,6 @@ if (!TOKEN) {
 // Инициализация бота
 const bot = new Bot(TOKEN);
 
-// In-Memory Хранилище сессий (аналог MemoryStorage в aiogram)
-const userSessions = new Map<number, UserSession>();
-
-// Загрузка вопросов из файла
-function loadQuestions(): Question[] {
-    try {
-        const filePath = path.resolve(process.cwd(), 'questions.json');
-        const rawData = fs.readFileSync(filePath, 'utf-8');
-        return JSON.parse(rawData) as Question[];
-    } catch (err) {
-        console.error("❌ Ошибка при чтении questions.json:", (err as Error).message);
-        return [];
-    }
-}
-
-const QUESTIONS: Question[] = loadQuestions();
-
-// Вспомогательные функции сессий
-function getSession(userId: number): UserSession {
-    if (!userSessions.has(userId)) {
-        userSessions.set(userId, { state: null, currentIndex: 0, answers: [] });
-    }
-    return userSessions.get(userId)!;
-}
-
-function clearSession(userId: number): void {
-    userSessions.delete(userId);
-}
-
 // Мок-функция отправки в Битрикс24
 async function sendToBitrix24(payload: BitrixPayload): Promise<boolean> {
     console.log("\n--- [ОТПРАВКА В БИТРИКС24] ---");
@@ -58,75 +31,10 @@ async function sendToBitrix24(payload: BitrixPayload): Promise<boolean> {
     return true;
 }
 
-// Отправка вопроса пользователю
-async function sendQuestion(ctx: Context, userId: number, questionIndex: number): Promise<void> {
-    const session = getSession(userId);
-
-    if (questionIndex < QUESTIONS.length) {
-        const question = QUESTIONS[questionIndex];
-
-        // Строим инлайн-кнопки
-        const buttons = question.options.map((option: string, optIdx: number) => [
-            {
-                text: option,
-                type: 'callback' as const,
-                payload: `ans_${questionIndex}_${optIdx}`
-            }
-        ]);
-
-        const text = `Вопрос ${questionIndex + 1} из ${QUESTIONS.length}:\n\n${question.text}`;
-
-        await ctx.reply(text, {
-            attachments: [
-                {
-                    type: 'inline_keyboard',
-                    payload: { buttons }
-                }
-            ]
-        });
-    } else {
-        // Переходим к сбору контактов
-        session.state = QuizState.WAITING_FOR_CONTACT;
-
-        const contactText =
-            "Спасибо за ваши ответы! 🎉\n" +
-            "Пожалуйста, оставьте ваш телефон или email, чтобы мы могли связаться с вами.\n\n" +
-            "Вы можете нажать на кнопку ниже, чтобы отправить свой контакт из профиля, " +
-            "или написать данные текстом вручную.";
-
-        await ctx.reply(contactText, {
-            attachments: [
-                {
-                    type: 'inline_keyboard',
-                    payload: {
-                        buttons: [
-                            [{ text: "📱 Поделиться контактом", type: "request_contact" }]
-                        ]
-                    }
-                }
-            ]
-        });
-    }
-}
-
+// 0. Кнопка "Начать"
+bot.command('bot_started', start);
 // 1. Команда /start
-bot.command('start', async (ctx: Context) => {
-    const userId = ctx.user?.user_id;
-
-    if (!QUESTIONS || QUESTIONS.length === 0 || !userId) {
-        await ctx.reply("Извините, сейчас опрос недоступен (список вопросов пуст).");
-        return;
-    }
-
-    userSessions.set(userId, {
-        state: QuizState.ANSWERING,
-        currentIndex: 0,
-        answers: []
-    });
-
-    await ctx.reply("Приветствуем! Ответьте на несколько вопросов, чтобы мы подобрали лучшее решение.");
-    await sendQuestion(ctx, userId, 0);
-});
+bot.command('start', start);
 
 // 2. Обработка нажатий на inline-кнопки (callbacks)
 bot.on('message_callback', async (ctx: Context) => {
