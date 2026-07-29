@@ -2,6 +2,7 @@ import { type Context } from "@maxhub/max-bot-api";
 import { clearSession, getSession } from "../storage";
 import { QuizState } from "../types";
 import { sendToBitrix } from "../integrations/send-to-bitrix";
+import { validateString } from "../utils/contact_validation";
 
 export async function onMessage(ctx: Context) {
     const textMessage = ctx.message?.body.text;
@@ -43,20 +44,22 @@ export async function onMessage(ctx: Context) {
             contactInfo = textMessage.trim();
         }
 
-        if (!contactInfo) {
+        const validateContact = validateString(contactInfo)
+
+        if (!validateContact || "ERROR" in validateContact) {
             await ctx.reply("Пожалуйста, отправьте контакт по кнопке или напишите его в виде текста.");
             return;
         }
 
         const username = ctx.user.username || '';
-        const fullName = `${ctx.user.name}`.trim();
 
         const success = await sendToBitrix({
-            userId,
-            username,
-            fullName,
-            answers: session.answers,
-            contact: contactInfo
+            TITLE: "Тестовый лид с бота в MAX",
+            NAME: username,
+            ...validateContact,
+            COMMENTS: session.answers.reduce((acc, curr, index) => {
+                return acc + `Ответ №${index + 1}: ${curr}\n`
+            }, '')
         });
 
         if (success) {
