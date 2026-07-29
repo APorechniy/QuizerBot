@@ -91,6 +91,8 @@ bot.on('message_created', async (ctx: Context) => {
 
     // Игнорируем вызовы команд
     if (textMessage && textMessage.startsWith('/')) {
+        console.log(`Отправлена команда ${textMessage}`)
+        console.log(`Тело сообщения ${ctx.message?.body}`)
         return;
     }
 
