@@ -1,4 +1,4 @@
-import { type Context } from "@maxhub/max-bot-api";
+import { Keyboard, type Context } from "@maxhub/max-bot-api";
 import { QuizState } from "../types";
 
 import { QUESTIONS } from "../questions";
@@ -40,16 +40,13 @@ export async function sendQuestion(ctx: Context, userId: number, questionIndex: 
             "Вы можете нажать на кнопку ниже, чтобы отправить свой контакт из профиля, " +
             "или написать данные текстом вручную.";
 
+        const keyboard = Keyboard.inlineKeyboard([
+            [Keyboard.button.requestContact('📱 Поделиться контактом')]
+        ])
+
         await ctx.reply(contactText, {
             attachments: [
-                {
-                    type: 'inline_keyboard',
-                    payload: {
-                        buttons: [
-                            [{ text: "📱 Поделиться контактом", type: "request_contact" }]
-                        ]
-                    }
-                }
+                keyboard
             ]
         });
     }
