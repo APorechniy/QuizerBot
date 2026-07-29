@@ -20,7 +20,7 @@ function validatePhone(phone: string): boolean {
     return phoneRegex.test(cleanedPhone) && cleanedPhone.replace(/\D/g, '').length >= 10;
 }
 
-export function validateString(input: string | null): ValidationResult {
+export function validateString(input: string | null | undefined): ValidationResult {
     const trimmed = input?.trim();
 
     if (!trimmed) {
