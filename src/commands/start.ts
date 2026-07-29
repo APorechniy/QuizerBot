@@ -8,6 +8,10 @@ import { setSession } from "../storage";
 export async function start(ctx: Context) {
     const userId = ctx.user?.user_id;
 
+    console.log("---------")
+    console.log("Start function")
+    console.log(`Тело сообщения ${ctx.message?.body}`)
+
     if (!QUESTIONS || QUESTIONS.length === 0 || !userId) {
         await ctx.reply("Извините, сейчас опрос недоступен (список вопросов пуст).");
         return;
