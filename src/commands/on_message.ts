@@ -29,10 +29,10 @@ export async function onMessage(ctx: Context) {
 
     // Ожидание контактов
     if (session.state === QuizState.WAITING_FOR_CONTACT) {
-        let contactInfo: string | null = null;
+        let contactInfo: string | null | undefined = ctx.contactInfo?.tel;
 
         // Вложение с контактом
-        if (ctx.message?.body.attachments) {
+        if (ctx.message?.body.attachments && !contactInfo) {
             const contactAttach = ctx.message.body.attachments.find((a) => a.type === 'contact');
             if (contactAttach) {
                 contactInfo = contactAttach.payload.vcf_info || '';
