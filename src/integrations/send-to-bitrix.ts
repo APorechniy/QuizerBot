@@ -25,8 +25,8 @@ export type BitrixLead = {
     LAST_NAME?: string;
     SECOND_NAME?: string;
     COMPANY_TITLE?: string;
-    PHONE?: Array<{ VALUE: string; TYPE_ID: string }>;
-    EMAIL?: Array<{ VALUE: string; TYPE_ID: string }>;
+    PHONE?: Array<{ VALUE: string; VALUE_TYPE: string }>;
+    EMAIL?: Array<{ VALUE: string; VALUE_TYPE: string }>;
     COMMENTS?: string;
     SOURCE_ID?: string;
     STATUS_ID?: string;

@@ -1,7 +1,12 @@
-type ValidationResult = {
-    VALUE: string | null,
-    TYPE_ID: "EMAIL" | "PHONE" | "ERROR"
+type Value = {
+    VALUE: string;
+    VALUE_TYPE: "WORK"
 }
+
+type ValidationResult =
+    | { EMAIL: Value[] }
+    | { PHONE: Value[] }
+    | { ERROR: string };
 
 function validateEmail(email: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -19,26 +24,26 @@ export function validateString(input: string | null): ValidationResult {
     const trimmed = input?.trim();
 
     if (!trimmed) {
-        return { VALUE: 'Empty string', TYPE_ID: "ERROR" };
+        return { ERROR: 'Empty string' };
     }
 
     // Проверяем, является ли строка email
     if (trimmed.includes('@')) {
         if (validateEmail(trimmed)) {
-            return { VALUE: trimmed, TYPE_ID: "EMAIL" };
+            return { EMAIL: [{ VALUE: trimmed, VALUE_TYPE: "WORK" }] };
         }
-        return { VALUE: 'Invalid email format', TYPE_ID: "ERROR" };
+        return { ERROR: 'Invalid email format' };
     }
 
     // Проверяем, является ли строка номером телефона
     if (validatePhone(trimmed)) {
-        return { VALUE: trimmed, TYPE_ID: "PHONE" };
+        return { PHONE: [{ VALUE: trimmed, VALUE_TYPE: "WORK" }] };
     }
 
     // Пытаемся определить по первым символам
     if (/^[\d+]/.test(trimmed)) {
-        return { VALUE: 'Invalid phone number format', TYPE_ID: "ERROR" };
+        return { ERROR: 'Invalid phone number format' };
     }
 
-    return { VALUE: 'Invalid email or phone number format', TYPE_ID: "ERROR" };
+    return { ERROR: 'String is neither valid email nor phone number' };
 }

@@ -58,7 +58,7 @@ export async function onMessage(ctx: Context) {
             NAME: username,
             ...validateContact,
             COMMENTS: session.answers.reduce((acc, curr, index) => {
-                return acc + `Ответ №${index + 1}: ${curr}\n`
+                return acc + `Ответ №${index + 1}: ${curr.answer}\n`
             }, '')
         });
 
