@@ -47,7 +47,7 @@ export async function onMessage(ctx: Context) {
         const validateContact = validateString(contactInfo)
 
         if (!validateContact || "ERROR" in validateContact) {
-            await ctx.reply("Пожалуйста, отправьте контакт по кнопке или напишите его в виде текста.");
+            await ctx.reply(`Пожалуйста, отправьте контакт по кнопке или напишите его в виде текста. Ошибка: ${validateContact?.ERROR}`);
             return;
         }
 
