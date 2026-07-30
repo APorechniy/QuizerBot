@@ -19,7 +19,7 @@ export async function onMessage(ctx: Context) {
         return;
     }
 
-    const session = getSession(userId);
+    const session = await getSession(userId);
 
     // Если человек пытается писать текстом во время квиза
     if (session.state === QuizState.ANSWERING) {
@@ -68,6 +68,6 @@ export async function onMessage(ctx: Context) {
             await ctx.reply("Произошла ошибка при регистрации заявки. Попробуйте еще раз позже.");
         }
 
-        clearSession(userId);
+        await clearSession(userId);
     }
 }

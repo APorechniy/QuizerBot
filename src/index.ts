@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import { start } from './commands/start';
 import { onMessage } from './commands/on_message';
 import { onCallback } from './commands/on_callback';
+import { initSessionCleaner } from './storage';
 
 dotenv.config();
 
@@ -28,5 +29,13 @@ bot.on('message_callback', onCallback);
 // 3. Обработка текста и контактов
 bot.on('message_created', onMessage);
 
-bot.start()
-console.log("🚀 TypeScript Бот Макс Мессенджера запущен!");
+async function bootstrap() {
+    // 1. Инициализируем фоновую проверку (каждые 30 минут)
+    initSessionCleaner(bot.api.sendMessageToUser, 30);
+
+    // 2. Запускаем бота
+    await bot.start();
+    console.log("🤖 Бот успешно запущен");
+}
+
+bootstrap();

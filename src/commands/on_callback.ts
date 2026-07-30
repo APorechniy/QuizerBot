@@ -12,7 +12,7 @@ export async function onCallback(ctx: Context) {
         return;
     }
 
-    const session = getSession(userId);
+    const session = await getSession(userId);
     const payload = ctx.callback?.payload as string;
 
     if (!payload || !payload.startsWith('ans_')) {

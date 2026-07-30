@@ -18,6 +18,8 @@ export interface UserSession {
     state: QuizState | null;
     currentIndex: number;
     answers: QuizAnswer[];
+    lastActivityAt: number; // timestamp
+    isNotified?: boolean;
 }
 
 export interface BitrixPayload {
