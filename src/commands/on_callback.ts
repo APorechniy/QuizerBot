@@ -2,7 +2,7 @@ import { type Context } from "@maxhub/max-bot-api";
 import { QUESTIONS } from "../questions";
 import { sendQuestion } from "./send_question";
 import { QuizState } from "../types";
-import { getSession } from "../storage";
+import { getSession, setSession } from "../storage";
 
 export async function onCallback(ctx: Context) {
     const userId = ctx.user?.user_id;
@@ -42,7 +42,10 @@ export async function onCallback(ctx: Context) {
         answer: selectedOption
     });
 
-    session.currentIndex += 1;
+    await setSession(userId, {
+        ...session,
+        currentIndex: session.currentIndex + 1
+    })
 
     await ctx.reply(`Ваш выбор: *${selectedOption}*`, { format: 'markdown' });
 
