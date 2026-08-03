@@ -15,8 +15,7 @@ export async function onCallback(ctx: Context) {
     const session = await getSession(userId);
     const payload = ctx.callback?.payload as string;
     const currentQuestionIndex = session.currentIndex
-    console.log("PAYLOAD:", payload)
-    console.log("SESSION INDEX:", currentQuestionIndex)
+
     if (!payload || !payload.startsWith('ans_')) {
         return;
     }

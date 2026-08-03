@@ -7,7 +7,7 @@ import { getSession } from "../storage";
 // Отправка вопроса пользователю
 export async function sendQuestion(ctx: Context, userId: number, questionIndex: number): Promise<void> {
     const session = await getSession(userId);
-    console.log("CurrentQuizetionIndex:", questionIndex)
+
     if (questionIndex < QUESTIONS.length) {
         const question = QUESTIONS[questionIndex];
 

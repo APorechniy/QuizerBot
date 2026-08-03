@@ -12,9 +12,7 @@ const getKey = (userId: number): string => `${SESSION_PREFIX}${userId}`;
 export async function getSession(userId: number): Promise<UserSession> {
     const key = getKey(userId);
     const data = await redis.get(key);
-    console.log("--------")
-    console.log("DATA", data)
-    console.log("--------")
+
     if (!data) {
         const newSession: UserSession = {
             state: null,
