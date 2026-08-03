@@ -1,6 +1,7 @@
 import { type Message } from "@maxhub/max-bot-api/types";
 import { type UserSession } from "../types";
 import { redis } from "./redis-client";
+import { getNotifyMessage } from "../utils/get_notify_message";
 
 const SESSION_PREFIX = "session:";
 const SESSION_TTL_SECONDS = 7 * 24 * 60 * 60;
@@ -51,8 +52,7 @@ export async function checkStaleSessions(
     sendMessageFn: (userId: number, message: string) => Promise<Message>
 ): Promise<void> {
     const NOW = Date.now();
-    // const TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000;
-    const TWENTY_FOUR_HOURS_MS = 30 * 1000;
+    const TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000;
 
     let cursor = "0";
 
@@ -81,16 +81,12 @@ export async function checkStaleSessions(
             // Если висит > 24ч и еще не уведомляли
             if (isStale && !session.isNotified) {
                 try {
-                    const templateMessage = `
-                        Здравствуйте! Мы не дождались вашего ответа — наверное, вы просто отвлеклись 🙂\nЧтобы получить подборку автомобилей, завершите опрос и нажмите кнопку «Отправить номер» ниже.\n\n📱 Наш менеджер свяжется с вами в ближайшее время.
-                    `;
+                    const templateMessage = getNotifyMessage(session.state);
                     await sendMessageFn(userId, templateMessage);
 
                     // Отмечаем, что уведомили
                     session.isNotified = true;
                     await setSession(userId, session);
-
-                    console.log(`🔔 Уведомление о зависшем квизе отправлено пользователю ${userId}`);
                 } catch (error) {
                     console.error(`❌ Ошибка отправки напоминания ${userId}:`, error);
                 }
