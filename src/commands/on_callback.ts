@@ -15,6 +15,7 @@ export async function onCallback(ctx: Context) {
     const session = await getSession(userId);
     const payload = ctx.callback?.payload as string;
     console.log("PAYLOAD:", payload)
+    console.log("SESSION INDEX:", session.currentIndex)
     if (!payload || !payload.startsWith('ans_')) {
         return;
     }
