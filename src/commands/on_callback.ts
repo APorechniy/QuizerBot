@@ -14,8 +14,9 @@ export async function onCallback(ctx: Context) {
 
     const session = await getSession(userId);
     const payload = ctx.callback?.payload as string;
+    const currentQuestionIndex = session.currentIndex
     console.log("PAYLOAD:", payload)
-    console.log("SESSION INDEX:", session.currentIndex)
+    console.log("SESSION INDEX:", currentQuestionIndex)
     if (!payload || !payload.startsWith('ans_')) {
         return;
     }
@@ -30,11 +31,11 @@ export async function onCallback(ctx: Context) {
     const optIdx = parseInt(optIdxStr, 10);
 
     // Игнорируем повторные клики по старым вопросам
-    if (qIdx !== session.currentIndex) {
+    if (qIdx !== currentQuestionIndex) {
         return;
     }
 
-    const question = QUESTIONS[session.currentIndex];
+    const question = QUESTIONS[currentQuestionIndex];
     const selectedOption = question.options[optIdx];
 
     session.answers.push({
@@ -44,11 +45,11 @@ export async function onCallback(ctx: Context) {
 
     await setSession(userId, {
         ...session,
-        currentIndex: session.currentIndex + 1
+        currentIndex: currentQuestionIndex + 1
     })
 
     await ctx.reply(`Ваш выбор: *${selectedOption}*`, { format: 'markdown' });
 
     // Следующий вопрос
-    await sendQuestion(ctx, userId, session.currentIndex);
+    await sendQuestion(ctx, userId, currentQuestionIndex + 1);
 }
