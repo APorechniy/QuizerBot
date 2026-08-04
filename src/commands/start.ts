@@ -4,6 +4,7 @@ import { QuizState } from "../types";
 import { QUESTIONS } from "../questions";
 import { sendQuestion } from "./send_question";
 import { setSession } from "../storage";
+import { delay } from "../utils/delay";
 
 const START_MESSAGE = `
     Приветствуем! На связи компания ООО "АРКО". Мы занимаемся привозом авто из Японии, Китая и Кореи.\n
@@ -29,5 +30,6 @@ export async function start(ctx: Context) {
     });
 
     await ctx.reply(START_MESSAGE);
+    await delay(7)
     await sendQuestion(ctx, userId, 0);
 }
