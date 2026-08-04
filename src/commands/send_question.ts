@@ -3,6 +3,7 @@ import { QuizState } from "../types";
 
 import { QUESTIONS } from "../questions";
 import { getSession } from "../storage";
+import { delay } from "../utils/delay";
 
 // Отправка вопроса пользователю
 export async function sendQuestion(ctx: Context, userId: number, questionIndex: number): Promise<void> {
@@ -22,13 +23,15 @@ export async function sendQuestion(ctx: Context, userId: number, questionIndex: 
 
         const text = `Вопрос ${questionIndex + 1} из ${QUESTIONS.length}:\n\n${question.text}`;
 
+        await delay(7);
+
         await ctx.reply(text, {
             attachments: [
                 {
                     type: 'inline_keyboard',
                     payload: { buttons }
                 }
-            ]
+            ],
         });
     } else {
         // Переходим к сбору контактов
@@ -43,6 +46,8 @@ export async function sendQuestion(ctx: Context, userId: number, questionIndex: 
         const keyboard = Keyboard.inlineKeyboard([
             [Keyboard.button.requestContact('📱 Поделиться контактом')]
         ])
+
+        await delay(7);
 
         await ctx.reply(contactText, {
             attachments: [
