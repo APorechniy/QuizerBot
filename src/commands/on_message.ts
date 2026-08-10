@@ -52,9 +52,11 @@ export async function onMessage(ctx: Context) {
         }
 
         const username = ctx.user.username || '';
-
+        console.log("----------")
+        console.log(username)
+        console.log(JSON.stringify(ctx.user))
         const success = await sendToBitrix({
-            TITLE: "Тестовый лид с бота в MAX",
+            TITLE: "Лид с бота в MAX",
             NAME: username,
             ...validateContact,
             COMMENTS: session.answers.reduce((acc, curr, index) => {
