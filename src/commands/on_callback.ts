@@ -20,7 +20,7 @@ export async function onCallback(ctx: Context) {
         return;
     }
 
-    // Если игрок уже не проходит опрос
+    // Если клиент уже не проходит опрос
     if (session.state !== QuizState.ANSWERING) {
         return;
     }

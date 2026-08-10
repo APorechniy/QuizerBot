@@ -2,7 +2,7 @@ import { Keyboard, type Context } from "@maxhub/max-bot-api";
 import { QuizState } from "../types";
 
 import { QUESTIONS } from "../questions";
-import { getSession } from "../storage";
+import { getSession, setSession } from "../storage";
 
 // Отправка вопроса пользователю
 export async function sendQuestion(ctx: Context, userId: number): Promise<void> {
@@ -32,8 +32,10 @@ export async function sendQuestion(ctx: Context, userId: number): Promise<void> 
             ],
         });
     } else {
-        // Переходим к сбору контактов
-        session.state = QuizState.WAITING_FOR_CONTACT;
+        await setSession(userId, {
+            ...session,
+            state: QuizState.WAITING_FOR_CONTACT
+        });
 
         const contactText =
             "Спасибо за ваши ответы! 🎉\n" +
