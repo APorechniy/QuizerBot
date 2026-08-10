@@ -51,10 +51,8 @@ export async function onMessage(ctx: Context) {
             return;
         }
 
-        const username = ctx.user.username || '';
-        console.log("----------")
-        console.log(username)
-        console.log(JSON.stringify(ctx.user))
+        const username = ctx.user.name || 'Не указан';
+
         const success = await sendToBitrix({
             TITLE: "Лид с бота в MAX",
             NAME: username,
