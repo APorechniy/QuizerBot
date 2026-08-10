@@ -1,0 +1,21 @@
+{
+    "name": "max-quiz-bot",
+    "version": "1.0.0",
+    "description": "Квиз-бот для Макс Мессенджера",
+    "main": "dist/index.js",
+    "scripts": {
+        "start": "node index.js",
+        "dev": "npx tsx ./src/index.ts"
+    },
+    "dependencies": {
+        "@maxhub/max-bot-api": "^0.2.5",
+        "dotenv": "^17.4.2",
+        "ioredis": "^5.11.1",
+        "tsx": "^4.23.1"
+    },
+    "devDependencies": {
+        "@types/ioredis": "^4.28.10",
+        "@types/node": "^26.1.1",
+        "typescript": "^7.0.2"
+    }
+}
