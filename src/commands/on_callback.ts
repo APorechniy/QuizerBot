@@ -50,5 +50,5 @@ export async function onCallback(ctx: Context) {
     await ctx.reply(`Ваш выбор: *${selectedOption}*`, { format: 'markdown' });
 
     // Следующий вопрос
-    await sendQuestion(ctx, userId, currentQuestionIndex + 1);
+    await sendQuestion(ctx, userId);
 }

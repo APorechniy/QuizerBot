@@ -5,8 +5,9 @@ import { QUESTIONS } from "../questions";
 import { getSession } from "../storage";
 
 // Отправка вопроса пользователю
-export async function sendQuestion(ctx: Context, userId: number, questionIndex: number): Promise<void> {
+export async function sendQuestion(ctx: Context, userId: number): Promise<void> {
     const session = await getSession(userId);
+    const questionIndex = session.currentIndex;
 
     if (questionIndex < QUESTIONS.length) {
         const question = QUESTIONS[questionIndex];

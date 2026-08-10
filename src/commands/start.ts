@@ -31,5 +31,5 @@ export async function start(ctx: Context) {
 
     await ctx.reply(START_MESSAGE);
     await delay(7)
-    await sendQuestion(ctx, userId, 0);
+    await sendQuestion(ctx, userId);
 }
