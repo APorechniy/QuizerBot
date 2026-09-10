@@ -30,6 +30,7 @@ export type BitrixLead = {
     COMMENTS?: string;
     SOURCE_ID?: string;
     STATUS_ID?: string;
+    ASSIGNED_BY_ID: number;
 }
 
 export async function sendToBitrix(bitrixLead: BitrixLead) {
