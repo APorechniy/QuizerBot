@@ -57,7 +57,7 @@ export async function onMessage(ctx: Context) {
             TITLE: "Лид с бота в MAX",
             NAME: username,
             ...validateContact,
-            ASSIGNED_BY_ID: 24,
+            ASSIGNED_BY_ID: 34,
             COMMENTS: session.answers.reduce((acc, curr, index) => {
                 return acc + `Ответ №${index + 1}: ${curr.answer}\n`
             }, '')
